@@ -23,15 +23,29 @@ namespace SmallPostAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<UserDto>> Create([FromBody] CreateUserDto dto, CancellationToken ct)
         {
-            var created = await userService.CreateAsync(dto, ct);
-            return CreatedAtAction(nameof(Get), new { id = created.Id }, created);
+            try
+            {
+                var created = await userService.CreateAsync(dto, ct);
+                return CreatedAtAction(nameof(Get), new { id = created.Id }, created);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(new { message = ex.Message });
+            }
         }
 
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Update(int id, [FromBody] UpdateUserDto dto, CancellationToken ct)
         {
-            await userService.UpdateAsync(id, dto, ct);
-            return NoContent();
+            try
+            {
+                await userService.UpdateAsync(id, dto, ct);
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
         [HttpDelete("{id:int}")]
