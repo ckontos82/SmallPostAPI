@@ -7,7 +7,7 @@
 
     public sealed record UserWithPostsDto(
         int Id, string Name, string Email,
-        IReadOnlyList<PostSummaryDto> Posts);
+        IReadOnlyList<PostUserDto> Posts);
 
-    public sealed record PostSummaryDto(int Id, string Title);
+    public sealed record PostUserDto(int Id, string Title, string Body);
 }

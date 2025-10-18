@@ -24,7 +24,7 @@ namespace SmallPostAPI.Services
                     u.Id, u.Name, u.Email,
                     u.Posts
                      .OrderByDescending(p => p.Id)
-                     .Select(p => new PostSummaryDto(p.Id, p.Title))
+                     .Select(p => new PostUserDto(p.Id, p.Title, p.Body))
                      .ToList()))
                 .FirstOrDefaultAsync(ct);
         }

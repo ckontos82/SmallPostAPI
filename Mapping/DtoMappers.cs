@@ -9,8 +9,7 @@ namespace SmallPostAPI.Mapping
         => new(u.Id, u.Name, u.Email);
 
         public static UserWithPostsDto ToWithPostsDto(this User u)
-            => new(u.Id, u.Name, u.Email,
-                   u.Posts.Select(p => new PostSummaryDto(p.Id, p.Title)).ToList());
+            => new(u.Id, u.Name, u.Email, u.Posts.Select(p => new PostUserDto(p.Id, p.Title, p.Body)).ToList());
 
         public static PostDto ToDto(this Post p)
             => new(p.Id, p.UserId, p.Title, p.Body);
