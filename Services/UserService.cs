@@ -40,7 +40,7 @@ namespace SmallPostAPI.Services
         public async Task<UserDto> CreateAsync(CreateUserDto dto, CancellationToken ct = default)
         {
             if (await db.Users.AnyAsync(u => u.Email == dto.Email, ct))
-                throw new InvalidOperationException("Email already exists.");
+                throw new InvalidOperationException($"User with email {dto.Email} already exists.");
 
             var user = new User { Name = dto.Name, Email = dto.Email };
             db.Users.Add(user);
