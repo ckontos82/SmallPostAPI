@@ -19,14 +19,14 @@ namespace SmallPostAPI.Services
         public async Task<UserWithPostsDto?> GetWithPostsAsync(int id, CancellationToken ct = default)
         {
             return await db.Users
-                    .Where(u => u.Id == id)
-                    .Select(u => new UserWithPostsDto(
-                        u.Id, u.Name, u.Email,
-                        u.Posts
-                            .OrderByDescending(p => p.Id)
-                            .Select(p => new PostUserDto(p.Id, p.Title, p.Body))
-                            .ToList()))
-                    .FirstOrDefaultAsync(ct);
+                .Where(u => u.Id == id)
+                .Select(u => new UserWithPostsDto(
+                    u.Id, u.Name, u.Email,
+                    u.Posts
+                        .OrderByDescending(p => p.Id)
+                        .Select(p => new PostUserDto(p.Id, p.Title, p.Body))
+                        .ToList()))
+                .FirstOrDefaultAsync(ct);
         }
 
         public async Task<IReadOnlyList<UserDto>> GetAllAsync(CancellationToken ct = default)
