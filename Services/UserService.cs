@@ -19,14 +19,14 @@ namespace SmallPostAPI.Services
         public async Task<UserWithPostsDto?> GetWithPostsAsync(int id, CancellationToken ct = default)
         {
             return await db.Users
-                .Where(u => u.Id == id)
-                .Select(u => new UserWithPostsDto(
-                    u.Id, u.Name, u.Email,
-                    u.Posts
-                     .OrderByDescending(p => p.Id)
-                     .Select(p => new PostUserDto(p.Id, p.Title, p.Body))
-                     .ToList()))
-                .FirstOrDefaultAsync(ct);
+                    .Where(u => u.Id == id)
+                    .Select(u => new UserWithPostsDto(
+                        u.Id, u.Name, u.Email,
+                        u.Posts
+                            .OrderByDescending(p => p.Id)
+                            .Select(p => new PostUserDto(p.Id, p.Title, p.Body))
+                            .ToList()))
+                    .FirstOrDefaultAsync(ct);
         }
 
         public async Task<IReadOnlyList<UserDto>> GetAllAsync(CancellationToken ct = default)
@@ -45,13 +45,14 @@ namespace SmallPostAPI.Services
             var user = new User { Name = dto.Name, Email = dto.Email };
             db.Users.Add(user);
             await db.SaveChangesAsync(ct);
+
             return new UserDto(user.Id, user.Name, user.Email);
         }
 
         public async Task UpdateAsync(int id, UpdateUserDto dto, CancellationToken ct = default)
         {
             var user = await db.Users.FirstOrDefaultAsync(u => u.Id == id, ct)
-                       ?? throw new KeyNotFoundException("User not found.");
+                                        ?? throw new KeyNotFoundException("User not found.");
 
             user.Name = dto.Name;
             user.Email = dto.Email;
