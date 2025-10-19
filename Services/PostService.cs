@@ -28,7 +28,8 @@ namespace SmallPostAPI.Services
         public async Task<PostDto> CreateAsync(CreatePostDto dto, CancellationToken ct = default)
         {
             var userExists = await db.Users.AnyAsync(u => u.Id == dto.UserId, ct);
-            if (!userExists) throw new KeyNotFoundException("User not found.");
+            if (!userExists) 
+                throw new KeyNotFoundException("User not found.");
 
             var post = new Post { UserId = dto.UserId, Title = dto.Title, Body = dto.Body };
             db.Posts.Add(post);
