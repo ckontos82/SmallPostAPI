@@ -24,6 +24,5 @@
         public User User { get; set; } = null!;
         public User Friend { get; set; } = null!;
         public User RequestedByUser { get; set; } = null!;
-
     }
 }
