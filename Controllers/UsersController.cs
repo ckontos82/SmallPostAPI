@@ -12,6 +12,13 @@ namespace SmallPostAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IReadOnlyList<UserDto>>> GetAll(CancellationToken ct)
         => Ok(await userService.GetAllAsync(ct));
+        
+        [HttpGet("user/{id}")]
+        public async Task<ActionResult<UserDto>> GetById(int id)
+        {
+            var user = await userService.GetAsync(id);
+            return user is null ? NotFound() : Ok(user);
+        }
 
         [HttpGet("{id:int}")]
         public async Task<ActionResult<UserWithPostsDto>> Get(int id, CancellationToken ct)

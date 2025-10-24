@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SmallPostAPI.Data;
 using SmallPostAPI.DTOs;
+using SmallPostAPI.Mapping;
 using SmallPostAPI.Models;
 using SmallPostAPI.Services.Interfaces;
 
@@ -19,7 +20,7 @@ namespace SmallPostAPI.Services
             var postsDto = await db.Posts
                             .Where(p => p.UserId == userId)
                             .OrderByDescending(p => p.Id)
-                            .Select(p => new PostDto(p.Id, p.UserId, p.Title, p.Body))
+                            .Select(p => p.ToDto())
                             .ToListAsync(ct);
 
             return postsDto.AsReadOnly();
@@ -31,7 +32,7 @@ namespace SmallPostAPI.Services
             if (!userExists) 
                 throw new KeyNotFoundException("User not found.");
 
-            var post = new Post { UserId = dto.UserId, Title = dto.Title, Body = dto.Body };
+            var post = dto.ToPost();
             db.Posts.Add(post);
             await db.SaveChangesAsync(ct);
 

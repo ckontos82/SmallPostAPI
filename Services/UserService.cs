@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SmallPostAPI.Data;
 using SmallPostAPI.DTOs;
+using SmallPostAPI.Mapping;
 using SmallPostAPI.Models;
 using SmallPostAPI.Services.Interfaces;
 
@@ -12,7 +13,7 @@ namespace SmallPostAPI.Services
         {
             return await db.Users
                 .Where(u => u.Id == id)
-                .Select(u => new UserDto(u.Id, u.Name, u.Email))
+                .Select(u => u.ToDto())
                 .FirstOrDefaultAsync(ct);
         }
 
@@ -20,20 +21,16 @@ namespace SmallPostAPI.Services
         {
             return await db.Users
                 .Where(u => u.Id == id)
-                .Select(u => new UserWithPostsDto(
-                    u.Id, u.Name, u.Email,
-                    u.Posts
-                        .OrderByDescending(p => p.Id)
-                        .Select(p => new PostUserDto(p.Id, p.Title, p.Body))
-                        .ToList()))
-                .FirstOrDefaultAsync(ct);
+                .Include(u => u.Posts)
+                .Select(u => u.ToUserWithPostsDto())
+                .SingleOrDefaultAsync(ct);
         }
 
         public async Task<IReadOnlyList<UserDto>> GetAllAsync(CancellationToken ct = default)
         {
             return await db.Users
                 .OrderBy(u => u.Id)
-                .Select(u => new UserDto(u.Id, u.Name, u.Email))
+                .Select(u => u.ToDto())
                 .ToListAsync(ct);
         }
 
@@ -42,7 +39,7 @@ namespace SmallPostAPI.Services
             if (await db.Users.AnyAsync(u => u.Email == dto.Email, ct))
                 throw new InvalidOperationException($"User with email {dto.Email} already exists.");
 
-            var user = new User { Name = dto.Name, Email = dto.Email };
+            var user = dto.ToUser();
             db.Users.Add(user);
             await db.SaveChangesAsync(ct);
 
