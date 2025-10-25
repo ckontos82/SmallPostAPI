@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SmallPostAPI.DTOs;
-using SmallPostAPI.Models;
 using SmallPostAPI.Services.Interfaces;
 
 namespace SmallPostAPI.Controllers
@@ -13,7 +12,7 @@ namespace SmallPostAPI.Controllers
         public async Task<ActionResult<IReadOnlyList<UserDto>>> GetAll(CancellationToken ct)
         => Ok(await userService.GetAllAsync(ct));
         
-        [HttpGet("user/{id}")]
+        [HttpGet("useronly/{id}")]
         public async Task<ActionResult<UserDto>> GetById(int id)
         {
             var user = await userService.GetAsync(id);

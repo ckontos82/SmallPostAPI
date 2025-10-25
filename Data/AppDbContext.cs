@@ -45,25 +45,23 @@ namespace SmallPostAPI.Data
             modelBuilder.Entity<Friendship>(b =>
             {
                 b.ToTable("Friendships", t =>
-                {
-                    t.HasCheckConstraint(
-                        "CK_Friendships_UnorderedPair",
-                        "[UserId] < [FriendId]"
-                    );
-                });
+                    t.HasCheckConstraint("CK_Friendships_UnorderedPair", "[UserId] < [FriendId]"));
 
                 b.HasKey(x => new { x.UserId, x.FriendId });
 
+                // User ↔ FriendshipsInitiated  (FK: UserId)
                 b.HasOne(x => x.User)
-                 .WithMany()
+                 .WithMany(u => u.FriendshipsInitiated)
                  .HasForeignKey(x => x.UserId)
-                 .OnDelete(DeleteBehavior.ClientCascade);
+                 .OnDelete(DeleteBehavior.ClientCascade); // or NoAction if you prefer
 
+                // Friend ↔ FriendshipsReceived (FK: FriendId)
                 b.HasOne(x => x.Friend)
-                 .WithMany()
+                 .WithMany(u => u.FriendshipsReceived)
                  .HasForeignKey(x => x.FriendId)
                  .OnDelete(DeleteBehavior.ClientCascade);
 
+                // RequestedByUser (independent third relationship)
                 b.HasOne(x => x.RequestedByUser)
                  .WithMany()
                  .HasForeignKey(x => x.RequestedByUserId)
@@ -72,6 +70,7 @@ namespace SmallPostAPI.Data
                 b.HasIndex(x => new { x.UserId, x.Status });
                 b.HasIndex(x => new { x.FriendId, x.Status });
             });
+
         }
     }
 }
