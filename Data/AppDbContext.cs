@@ -49,19 +49,16 @@ namespace SmallPostAPI.Data
 
                 b.HasKey(x => new { x.UserId, x.FriendId });
 
-                // User ↔ FriendshipsInitiated  (FK: UserId)
                 b.HasOne(x => x.User)
                  .WithMany(u => u.FriendshipsInitiated)
                  .HasForeignKey(x => x.UserId)
-                 .OnDelete(DeleteBehavior.ClientCascade); // or NoAction if you prefer
+                 .OnDelete(DeleteBehavior.ClientCascade); 
 
-                // Friend ↔ FriendshipsReceived (FK: FriendId)
                 b.HasOne(x => x.Friend)
                  .WithMany(u => u.FriendshipsReceived)
                  .HasForeignKey(x => x.FriendId)
                  .OnDelete(DeleteBehavior.ClientCascade);
 
-                // RequestedByUser (independent third relationship)
                 b.HasOne(x => x.RequestedByUser)
                  .WithMany()
                  .HasForeignKey(x => x.RequestedByUserId)
