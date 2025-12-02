@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
+using SmallPostAPI;
 using SmallPostAPI.Data;
 using SmallPostAPI.Services;
 using SmallPostAPI.Services.Interfaces;
@@ -24,6 +25,8 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
     app.MapScalarApiReference();
 }
+
+app.UseExceptionHandlingMiddleware();
 
 app.MapHealthChecks("/health", new HealthCheckOptions
 {
